@@ -2,41 +2,20 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <!-- CRITICAL FIX: Ensure viewport is set for mobile responsiveness -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>แบบสอบถามความพึงพอใจ</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* * FIXES START: AGGRESSIVE MOBILE SCROLL FIX 
-         * บังคับให้ HTML และ BODY เป็น Scroll Container หลัก 
-         * วิธีนี้จะช่วยป้องกัน Parent Frame ไม่ให้ดักจับ Touch Scroll Events
-         */
-        html, body {
-            /* 1. Force full viewport height */
-            height: 100%; 
-            /* 2. Force scrollable on content overflow */
-            overflow: auto; 
-            /* 3. Enhance touch scrolling smoothness on iOS */
-            -webkit-overflow-scrolling: touch;
-        }
-
         body {
             font-family: 'Kanit', sans-serif;
             background-color: #fbf3ed;
-            padding: 1rem;
+            display: block;
+            padding: 2rem;
             color: #4A5568;
-            margin: 0; 
-            width: 100vw; 
-            min-width: 100%; 
-            overflow-x: hidden; /* ป้องกัน Horizontal Scroll */
-            /* ป้องกันการเลื่อนทะลุไปหน้าเว็บหลัก (Scroll Chaining) */
-            overscroll-behavior: contain; 
         }
-        /* FIXES END */
-
         .container {
             width: 100%;
             max-width: 900px;
@@ -44,21 +23,16 @@
             backdrop-filter: blur(20px);
             border-radius: 2rem;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem; 
+            padding: 2rem;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            margin: 1rem auto; 
+            margin: auto;
             position: relative;
         }
-        @media (min-width: 640px) {
-            .container {
-                padding: 2rem;
-            }
-        }
         .liquid-glass-card {
-            background: rgba(200, 230, 255, 0.6); 
+            background: rgba(200, 230, 255, 0.6); /* พื้นหลังโทนฟ้าอ่อนๆ */
             backdrop-filter: blur(10px);
             border-radius: 1.5rem;
-            padding: 1.5rem; 
+            padding: 2rem;
             margin-bottom: 1.5rem;
             border: 1px solid rgba(255, 255, 255, 0.4);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -73,6 +47,7 @@
         .btn-link {
             display: block;
             width: 100%;
+            /* text-align: left; ถูกลบออกเพื่อให้ใช้ flex center แทน */
             padding: 1rem 1.5rem;
             border-radius: 1rem;
             background: rgba(255, 255, 255, 0.7);
@@ -84,22 +59,20 @@
         }
         .btn-link:hover {
             background: rgba(255, 255, 255, 0.9);
-            transform: scale(1.01); 
+            transform: translateX(0px); /* ลบการเลื่อนไปด้านข้างเมื่อ hover */
         }
-        
-        /* ปรับปรุง Rating Input ให้รองรับมือถือ */
         .rating-input {
             appearance: none;
             -webkit-appearance: none;
             display: inline-block;
-            width: 1.25rem; 
-            height: 1.25rem; 
+            width: 1.5rem;
+            height: 1.5rem;
             border: 2px solid #94A3B8;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.2s ease;
             position: relative;
-            margin: 0 0.1rem; 
+            margin: 0 0.25rem;
         }
         .rating-input:checked {
             background-color: #EF4444;
@@ -108,54 +81,45 @@
             box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3);
         }
         .rating-input:checked:after {
-            width: 0.4rem;
-            height: 0.4rem;
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0.5rem;
+            height: 0.5rem;
+            background: white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
         }
-
-        /* ปรับปรุง Rating Label ให้รองรับมือถือ */
         .rating-label {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 1.75rem; 
-            height: 1.75rem; 
+            width: 2rem;
+            height: 2rem;
             border-radius: 50%;
             font-weight: bold;
             color: #6B7280;
             background-color: #E5E7EB;
             transition: all 0.2s ease;
-            font-size: 0.875rem; 
         }
-        @media (min-width: 640px) {
-            .rating-label {
-                width: 2rem;
-                height: 2rem;
-                font-size: 1rem;
-            }
-        }
-        
         input[type="radio"]:checked + .rating-label {
             background-color: #EF4444;
             color: white;
             transform: scale(1.1);
         }
-        
-        /* ปรับปรุง layout ของ rating input ให้เหมาะสมบนมือถือ */
-        .rating-controls-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.5rem 0.25rem;
-            border-radius: 0.75rem;
-            background-color: rgba(255, 255, 255, 0.5); 
-            margin-top: 0.5rem;
+        .star-rating input[type="radio"] {
+            display: none;
         }
-        .rating-flex-center {
-            display: flex;
-            align-items: center;
-            space-x: 0.25rem;
+        .star-rating label {
+            font-size: 2rem;
+            color: #D1D5DB;
+            cursor: pointer;
+            transition: color 0.2s;
         }
-
+        .star-rating input[type="radio"]:checked ~ label {
+            color: gold;
+        }
         .close-btn {
             position: absolute;
             top: 1rem;
@@ -188,11 +152,10 @@
             border-radius: 1rem;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            max-width: 90%;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-w-full overflow-x-hidden">
+<body class="bg-gray-100">
 
     <div id="main-page" class="container">
         <!-- หัวข้อหลัก -->
@@ -203,25 +166,8 @@
             โครงการพัฒนาระบบจัดการศึกษาภาษาต่างประเทศ
             <span class="block text-lg sm:text-xl font-medium text-gray-700 mt-1">(เทศบาลนครบางบัวทอง)</span>
         </h1>
-
-        <!-- คำชี้แจง (Instruction Box) -->
-        <div class="mb-6 p-4 md:p-6 bg-blue-50 border-l-4 border-blue-500 rounded-lg shadow-md">
-            <h2 class="text-lg sm:text-xl font-semibold text-blue-800 flex items-center mb-2">
-                <span class="text-2xl mr-2">📝</span>
-                คำชี้แจง
-            </h2>
-            <p class="text-sm sm:text-base text-gray-700">แบบสอบถามนี้จัดทำขึ้นเพื่อประเมินและพัฒนาการเรียนการสอนภาษาต่างประเทศ (อังกฤษ–จีน) ในโรงเรียนสังกัดเทศบาลนครบางบัวทอง</p>
-            <ul class="mt-3 text-sm sm:text-base text-gray-700 space-y-1 list-disc list-inside">
-                <li><span class="font-bold text-blue-600">🔹 วัตถุประสงค์ :</span> ประเมินความพร้อม กระบวนการ ผลลัพธ์ และใช้ข้อมูลพัฒนาโครงการ</li>
-                <li><span class="font-bold text-blue-600">🔒 ข้อมูลที่ท่านตอบเป็นความลับ</span> ไม่มีคำตอบใดถูกหรือผิด โปรดตอบตามความจริง</li>
-            </ul>
-            <p class="mt-3 text-sm sm:text-base font-medium text-green-700">
-                ✅ กรุณาเลือกแบบสอบถามที่ตรงกับท่านจากปุ่มด้านล่างนี้
-            </p>
-        </div>
-        
         <div class="space-y-4">
-            <!-- ปุ่ม 1: แบบประเมินความพึงพอใจต่อการสอนของครู (สำหรับผู้บริหาร / ครู / นักเรียน / ผู้ปกครอง) -->
+            <!-- ปุ่ม 1 (เดิม 3): แบบประเมินความพึงพอใจต่อการสอนของครู (สำหรับผู้บริหาร / ครู / นักเรียน / ผู้ปกครอง) -->
             <button class="btn-link" onclick="showForm('eval-form')">
                 <span class="flex items-center justify-center w-full space-x-4">
                     <span class="text-2xl">📊</span>
@@ -231,7 +177,7 @@
                     </span>
                 </span>
             </button>
-            <!-- ปุ่ม 2: แบบประเมินการสอนของครู (สำหรับนักเรียน) -->
+            <!-- ปุ่ม 2 (เดิม 1): แบบประเมินการสอนของครู (สำหรับนักเรียน) -->
             <button class="btn-link" onclick="showForm('teacher-form')">
                 <span class="flex items-center justify-center w-full space-x-4">
                     <span class="text-2xl">👩‍🏫</span>
@@ -241,7 +187,7 @@
                     </span>
                 </span>
             </button>
-            <!-- ปุ่ม 3: แบบสอบถามความคิดเห็นสำหรับผู้ปกครอง -->
+            <!-- ปุ่ม 3 (เดิม 2): แบบสอบถามความคิดเห็นสำหรับผู้ปกครอง -->
             <button class="btn-link" onclick="showForm('parent-form')">
                 <span class="flex items-center justify-center w-full space-x-4">
                     <span class="text-2xl">👨‍👩‍👧‍👦</span>
@@ -345,7 +291,12 @@
             <div id="loading-message-teacher" class="hidden text-center text-sm text-gray-500 mt-4">
                 กำลังส่งข้อมูล... โปรดรอสักครู่
             </div>
-            <!-- ข้อความสำเร็จ/ผิดพลาดถูกย้ายไปที่ Dialog Modal เพื่อหลีกเลี่ยงข้อจำกัดของ iFrame -->
+            <div id="success-message-teacher" class="hidden text-center text-green-600 font-semibold mt-4">
+                ✅ ข้อมูลของคุณถูกส่งเรียบร้อยแล้ว! ขอบคุณครับ/ค่ะ
+            </div>
+            <div id="error-message-teacher" class="hidden text-center text-red-600 font-semibold mt-4">
+                ❌ เกิดข้อผิดพลาดในการส่งข้อมูล โปรดลองใหม่อีกครั้ง
+            </div>
         </form>
     </div>
 
@@ -420,6 +371,12 @@
             <div id="loading-message-parent" class="hidden text-center text-sm text-gray-500 mt-4">
                 กำลังส่งข้อมูล... โปรดรอสักครู่
             </div>
+            <div id="success-message-parent" class="hidden text-center text-green-600 font-semibold mt-4">
+                ✅ ข้อมูลของคุณถูกส่งเรียบร้อยแล้ว! ขอบคุณครับ/ค่ะ
+            </div>
+            <div id="error-message-parent" class="hidden text-center text-red-600 font-semibold mt-4">
+                ❌ เกิดข้อผิดพลาดในการส่งข้อมูล โปรดลองใหม่อีกครั้ง
+            </div>
         </form>
     </div>
 
@@ -493,6 +450,12 @@
             <div id="loading-message-eval" class="hidden text-center text-sm text-gray-500 mt-4">
                 กำลังส่งข้อมูล... โปรดรอสักครู่
             </div>
+            <div id="success-message-eval" class="hidden text-center text-green-600 font-semibold mt-4">
+                ✅ ข้อมูลของคุณถูกส่งเรียบร้อยแล้ว! ขอบคุณครับ/ค่ะ
+            </div>
+            <div id="error-message-eval" class="hidden text-center text-red-600 font-semibold mt-4">
+                ❌ เกิดข้อผิดพลาดในการส่งข้อมูล โปรดลองใหม่อีกครั้ง
+            </div>
         </form>
     </div>
 
@@ -510,16 +473,12 @@
             const gradeSelects = ['grade_teacher', 'grade_parent'];
             gradeSelects.forEach(id => {
                 const gradeSelect = document.getElementById(id);
-                // Clear existing options
-                gradeSelect.innerHTML = '<option value="">-- กรุณาเลือกระดับชั้น --</option>'; 
-                // Primary School P.1 - P.6
                 for (let i = 1; i <= 6; i++) {
                     const primaryOption = document.createElement('option');
                     primaryOption.value = `ป.${i}`;
                     primaryOption.textContent = `ป.${i} (Grade ${i})`;
                     gradeSelect.appendChild(primaryOption);
                 }
-                // Secondary School M.1 - M.6
                 for (let i = 1; i <= 6; i++) {
                     const secondaryOption = document.createElement('option');
                     secondaryOption.value = `ม.${i}`;
@@ -542,7 +501,8 @@
                 "10. บุคลิกภาพ การแต่งกายและการพูดจาของ teacher/เหล่าซือ เหมาะสม (Personality, attire, and communication way)",
                 "11. teacher/เหล่าซือ เข้าสอนและออกตรงตามเวลา (On-time to class)"
             ];
-            generateRatingInputs(document.getElementById('teacher-ratings-section'), teacherRatings, "rating-teacher");
+            const teacherRatingsSection = document.getElementById('teacher-ratings-section');
+            generateRatingInputs(teacherRatingsSection, teacherRatings, "rating-teacher");
 
             // Parent Form English Ratings
             const parentEnglishRatings = [
@@ -552,7 +512,8 @@
                 "4. ท่านเห็นว่าการเรียนภาษาอังกฤษโดยครูต่างชาติในโรงเรียนมีประโยชน์ต่อนักเรียนมากน้อยเพียงใด",
                 "5. ความพึงพอใจต่อการจัดการเรียนรู้ภาษาอังกฤษโดยครูต่างชาติในภาพรวม"
             ];
-            generateRatingInputs(document.getElementById('parent-english-ratings'), parentEnglishRatings, "rating-parent-english");
+            const parentEnglishRatingsSection = document.getElementById('parent-english-ratings');
+            generateRatingInputs(parentEnglishRatingsSection, parentEnglishRatings, "rating-parent-english");
 
             // Parent Form Chinese Ratings
             const parentChineseRatings = [
@@ -562,7 +523,8 @@
                 "4. ท่านเห็นว่าการเรียนภาษาจีนในโรงเรียนมีประโยชน์ต่อนักเรียนมากน้อยเพียงใด",
                 "5. ความพึงพอใจต่อการจัดการเรียนรู้ภาษาจีนโดยรวม"
             ];
-            generateRatingInputs(document.getElementById('parent-chinese-ratings'), parentChineseRatings, "rating-parent-chinese");
+            const parentChineseRatingsSection = document.getElementById('parent-chinese-ratings');
+            generateRatingInputs(parentChineseRatingsSection, parentChineseRatings, "rating-parent-chinese");
 
             // Evaluator Form Ratings
             const evalRatings = [
@@ -582,7 +544,8 @@
                 "14. มีระเบียบวินัยในการทำงาน",
                 "15. มีการปฏิบัติตนอย่างเหมาะสม เป็นแบบอย่างที่ดีต่อนักเรียน"
             ];
-            generateRatingInputs(document.getElementById('eval-ratings-section'), evalRatings, "rating-eval");
+            const evalRatingsSection = document.getElementById('eval-ratings-section');
+            generateRatingInputs(evalRatingsSection, evalRatings, "rating-eval");
         });
 
         // Function to generate rating inputs dynamically
@@ -593,13 +556,13 @@
                 item.className = 'rating-item';
                 item.innerHTML = `
                     <label class="block text-base sm:text-lg text-gray-700 mb-2">${text}</label>
-                    <div class="rating-controls-wrapper">
+                    <div class="flex justify-between items-center px-2 py-1">
                         <span class="text-sm sm:text-base text-gray-500">น้อยที่สุด</span>
-                        <div class="rating-flex-center space-x-1 sm:space-x-2">
+                        <div class="flex items-center space-x-2">
                             ${[1, 2, 3, 4, 5].map(i => `
                                 <label>
                                     <input type="radio" class="rating-input" name="${namePrefix}-${index + 1}" value="${i}" required>
-                                    <span class="rating-label">${i}</span>
+                                    <span class="rating-label text-sm sm:text-base">${i}</span>
                                 </label>
                             `).join('')}
                         </div>
@@ -614,8 +577,6 @@
         function showForm(formId) {
             document.getElementById('main-page').classList.add('hidden');
             document.getElementById(formId).classList.remove('hidden');
-            // Force scroll to top when form is shown
-            window.scrollTo(0, 0); 
         }
 
         function showPage(pageId) {
@@ -623,8 +584,6 @@
                 form.classList.add('hidden');
             });
             document.getElementById(pageId).classList.remove('hidden');
-            // Force scroll to top when main page is shown
-            window.scrollTo(0, 0); 
         }
 
         // Show custom dialog
@@ -646,20 +605,23 @@
                 e.preventDefault();
 
                 const loadingMessage = form.querySelector('[id^="loading-message-"]');
+                const successMessage = form.querySelector('[id^="success-message-"]');
+                const errorMessage = form.querySelector('[id^="error-message-"]');
                 const submitButton = form.querySelector('button[type="submit"]');
 
                 // Show loading message and disable button
                 loadingMessage.classList.remove('hidden');
+                successMessage.classList.add('hidden');
+                errorMessage.classList.add('hidden');
                 submitButton.disabled = true;
 
                 const formData = new FormData(form);
                 const data = Object.fromEntries(formData.entries());
 
-                // *** IMPORTANT: URL นี้คือ Google Apps Script Web App URL ที่ได้จากการ Deploy โค้ด ***
+                // Replace with your actual Web App URL
                 const url = "https://script.google.com/macros/s/AKfycbyA_EJB9sxCZFVZP5reKwfijhOglutOdSsSQBsKOEBM3xR3vkoOHe086XNN6wBF5hBGrw/exec"; 
 
                 try {
-                    // Using fetch with 'no-cors' mode is required for Google Apps Script 
                     await fetch(url, {
                         method: 'POST',
                         mode: 'no-cors',
@@ -669,12 +631,10 @@
                         body: new URLSearchParams(data)
                     });
 
-                    // We assume success for user experience due to 'no-cors' limitation
-                    showDialog("✅ ข้อมูลของคุณถูกส่งเรียบร้อยแล้ว! ขอบคุณครับ/ค่ะ");
+                    successMessage.classList.remove('hidden');
                     form.reset();
-                    showPage('main-page'); // กลับไปหน้าหลัก
                 } catch (error) {
-                    showDialog("❌ เกิดข้อผิดพลาดในการส่งข้อมูล โปรดลองใหม่อีกครั้ง");
+                    errorMessage.classList.remove('hidden');
                     console.error('Error submitting form:', error);
                 } finally {
                     loadingMessage.classList.add('hidden');
@@ -685,4 +645,3 @@
     </script>
 </body>
 </html>
-
