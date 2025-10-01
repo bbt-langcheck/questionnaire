@@ -47,7 +47,6 @@
         .btn-link {
             display: block;
             width: 100%;
-            /* text-align: left; ถูกลบออกเพื่อให้ใช้ flex center แทน */
             padding: 1rem 1.5rem;
             border-radius: 1rem;
             background: rgba(255, 255, 255, 0.7);
@@ -59,7 +58,7 @@
         }
         .btn-link:hover {
             background: rgba(255, 255, 255, 0.9);
-            transform: translateX(0px); /* ลบการเลื่อนไปด้านข้างเมื่อ hover */
+            transform: translateX(0px);
         }
         .rating-input {
             appearance: none;
@@ -187,11 +186,14 @@
                     </span>
                 </span>
             </button>
-            <!-- ปุ่ม 3: แบบสอบถามความคิดเห็นสำหรับผู้ปกครอง -> Sheet3 -->
+            <!-- ปุ่ม 3: แบบสอบถามความคิดเห็นสำหรับผู้ปกครองต่อการสอนของครู (สำหรับผู้ปกครอง) -> Sheet3 -->
             <button class="btn-link" onclick="showForm('parent-form')">
                 <span class="flex items-center justify-center w-full space-x-4">
                     <span class="text-2xl">👨‍👩‍👧‍👦</span>
-                    <span class="text-lg sm:text-xl font-semibold">แบบสอบถามความคิดเห็นสำหรับผู้ปกครอง</span>
+                    <span class="flex flex-col items-center">
+                        <span class="text-lg sm:text-xl font-semibold">แบบสอบถามความคิดเห็นสำหรับผู้ปกครองต่อการสอนของครู</span>
+                        <span class="text-sm sm:text-base font-normal text-gray-600">(สำหรับผู้ปกครอง)</span>
+                    </span>
                 </span>
             </button>
         </div>
@@ -305,7 +307,7 @@
         <button class="close-btn" onclick="showPage('main-page')">
             &#10006;
         </button>
-        <h2 class="text-xl sm:text-2xl font-semibold mb-4 text-center">แบบสอบถามความคิดเห็นสำหรับผู้ปกครอง</h2>
+        <h2 class="text-xl sm:text-2xl font-semibold mb-4 text-center">แบบสอบถามความคิดเห็นสำหรับผู้ปกครองต่อการสอนของครู</h2>
         <p class="text-center mb-6 text-sm sm:text-base text-gray-600">(Parent Opinion Survey)</p>
         <form id="parentEvalForm" class="space-y-6">
             <input type="hidden" name="sheetName" value="Sheet3">
@@ -334,15 +336,15 @@
                 </div>
             </div>
             <!-- ส่วนที่ 1: ความคิดเห็นเกี่ยวกับการเรียนภาษาอังกฤษโดยครูต่างชาติ -->
-            <div class="liquid-glass-card">
+            <div class="liquid-glass-card" id="english-course-section">
                 <h3 class="text-lg sm:text-xl font-semibold mb-4">ส่วนที่ 1: ความคิดเห็นเกี่ยวกับการเรียนภาษาอังกฤษโดยครูต่างชาติ</h3>
                 <p class="mb-4 text-sm sm:text-base text-gray-600">กรุณาให้คะแนน (ระดับ 1 = น้อยที่สุด ถึง ระดับ 5 = มากที่สุด)</p>
                 <div id="parent-english-ratings" class="space-y-4">
                     <!-- Rating items will be injected by JavaScript -->
                 </div>
             </div>
-            <!-- ส่วนที่ 2: ความคิดเห็นเกี่ยวกับการเรียนภาษาจีน -->
-            <div class="liquid-glass-card">
+            <!-- ส่วนที่ 2: ความคิดเห็นเกี่ยวกับการเรียนภาษาจีน - จะถูกซ่อน/แสดงตามการเลือกหลักสูตร -->
+            <div class="liquid-glass-card" id="chinese-course-section">
                 <h3 class="text-lg sm:text-xl font-semibold mb-4">ส่วนที่ 2: ความคิดเห็นเกี่ยวกับการเรียนภาษาจีน</h3>
                 <p class="mb-4 text-sm sm:text-base text-gray-600">กรุณาให้คะแนน (ระดับ 1 = น้อยที่สุด ถึง ระดับ 5 = มากที่สุด)</p>
                 <div id="parent-chinese-ratings" class="space-y-4">
@@ -468,6 +470,9 @@
     </div>
 
     <script>
+        // **** สำคัญ: ต้องเปลี่ยน URL นี้เป็น Web App URL Deployment ล่าสุดของคุณ ****
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyA_EJB9sxCZFVZP5reKwfijhOglutOdSsSQBsKOEBM3xR3vkoOHe086XNN6wBF5hBGrw/exec"; 
+        
         document.addEventListener('DOMContentLoaded', () => {
             // Dynamically generate grade options for all relevant forms
             const gradeSelects = ['grade_teacher', 'grade_parent'];
@@ -487,6 +492,8 @@
                 }
             });
 
+            // --- Form Data Initialization ---
+
             // Teacher Form Ratings (Sheet2)
             const teacherRatings = [
                 "1. กิจกรรมตลอดภาคเรียนสนุกและน่าสนใจ (Classroom activities for semester 1 is fun and interesting.)",
@@ -504,23 +511,23 @@
             const teacherRatingsSection = document.getElementById('teacher-ratings-section');
             generateRatingInputs(teacherRatingsSection, teacherRatings, "rating-teacher");
 
-            // Parent Form English Ratings (Sheet3)
+            // Parent Form English Ratings (Sheet3) - UPDATED TEXT
             const parentEnglishRatings = [
-                "1. ท่านคิดว่านักเรียนมีความก้าวหน้าในการเรียนภาษาอังกฤษโดยครูต่างชาติที่โรงเรียนจัดอย่างไร",
-                "2. ท่านพบว่านักเรียนมีความสามารถในการใช้ภาษาอังกฤษในชีวิตประจำวันเพิ่มขึ้นหรือไม่",
-                "3. ท่านพึงพอใจกับเนื้อหาของหลักสูตรภาษาอังกฤษ โดยครูต่างชาติที่โรงเรียนจัดเพียงใด",
+                "1. ท่านคิดว่านักเรียนมีความก้าวหน้าในการเรียนภาษาอังกฤษโดยครูต่างชาติที่โรงเรียนจัดขึ้น",
+                "2. ท่านพบว่านักเรียนมีความสามารถในการใช้ภาษาอังกฤษในชีวิตประจำวันเพิ่มขึ้น",
+                "3. ท่านพึงพอใจกับเนื้อหาของหลักสูตรภาษาอังกฤษ โดยครูต่างชาติที่โรงเรียนจัดการเรียนรู้",
                 "4. ท่านเห็นว่าการเรียนภาษาอังกฤษโดยครูต่างชาติในโรงเรียนมีประโยชน์ต่อนักเรียนมากน้อยเพียงใด",
                 "5. ความพึงพอใจต่อการจัดการเรียนรู้ภาษาอังกฤษโดยครูต่างชาติในภาพรวม"
             ];
             const parentEnglishRatingsSection = document.getElementById('parent-english-ratings');
             generateRatingInputs(parentEnglishRatingsSection, parentEnglishRatings, "rating-parent-english");
 
-            // Parent Form Chinese Ratings (Sheet3)
+            // Parent Form Chinese Ratings (Sheet3) - UPDATED TEXT (Corrected language context)
             const parentChineseRatings = [
-                "1. ท่านคิดว่านักเรียนมีความก้าวหน้าในการเรียนภาษาจีนจากหลักสูตรที่โรงเรียนจัดอย่างไร",
-                "2. ท่านพบว่านักเรียนมีความสามารถในการใช้ภาษาจีนในชีวิตประจำวันเพิ่มขึ้นหรือไม่",
-                "3. ท่านพึงพอใจกับเนื้อหาของหลักสูตรภาษาจีนที่โรงเรียนจัดเพียงใด",
-                "4. ท่านเห็นว่าการเรียนภาษาจีนในโรงเรียนมีประโยชน์ต่อนักเรียนมากน้อยเพียงใด",
+                "1. ท่านคิดว่านักเรียนมีความก้าวหน้าในการเรียนภาษาจีนจากหลักสูตรที่โรงเรียนจัดขึ้น",
+                "2. ท่านพบว่านักเรียนมีความสามารถในการใช้ภาษาจีนในชีวิตประจำวันเพิ่มขึ้นการเรียนรู้",
+                "3. ท่านพึงพอใจกับเนื้อหาของหลักสูตรภาษาจีนที่โรงเรียนจัด",
+                "4. ท่านเห็นว่าการเรียนภาษาจีนในโรงเรียนมีประโยชน์ต่อนักเรียน", // Removed "มากน้อยเพียงใด" as per request
                 "5. ความพึงพอใจต่อการจัดการเรียนรู้ภาษาจีนโดยรวม"
             ];
             const parentChineseRatingsSection = document.getElementById('parent-chinese-ratings');
@@ -546,6 +553,58 @@
             ];
             const evalRatingsSection = document.getElementById('eval-ratings-section');
             generateRatingInputs(evalRatingsSection, evalRatings, "rating-eval");
+            
+            // --- Course Selection Logic for Parent Form (Sheet3) ---
+            const courseSelectParent = document.getElementById('course_parent');
+            const chineseSection = document.getElementById('chinese-course-section');
+
+            const handleCourseChange = () => {
+                const selectedCourse = courseSelectParent.value;
+                const chineseRadios = chineseSection.querySelectorAll('input[type="radio"]');
+
+                if (selectedCourse === 'ภาษาอังกฤษ') {
+                    // 1. Hide Chinese section
+                    chineseSection.classList.add('hidden');
+                    
+                    // 2. Unset 'required' for hidden inputs and set values to '0'
+                    chineseRadios.forEach(radio => {
+                        radio.required = false; // Important for submission
+                        // Uncheck any current selection
+                        radio.checked = false; 
+                    });
+
+                    // 3. Add hidden fields to explicitly send '0' for Chinese ratings
+                    // This ensures the column structure in Sheet3 is maintained.
+                    // We remove previous hidden inputs before adding new ones
+                    document.querySelectorAll('#parentEvalForm input[data-filler="chinese"]').forEach(input => input.remove());
+                    
+                    for (let i = 1; i <= 5; i++) {
+                        const fillerInput = document.createElement('input');
+                        fillerInput.type = 'hidden';
+                        fillerInput.name = `rating-parent-chinese-${i}`;
+                        fillerInput.value = '0'; // Set value to '0' as requested
+                        fillerInput.setAttribute('data-filler', 'chinese');
+                        document.getElementById('parentEvalForm').appendChild(fillerInput);
+                    }
+
+                } else if (selectedCourse === 'ภาษาจีน' || selectedCourse === '') {
+                    // Show Chinese section
+                    chineseSection.classList.remove('hidden');
+                    
+                    // Re-set 'required' and remove filler inputs
+                    chineseRadios.forEach(radio => {
+                        // Only make required if a course is actually selected (not the default empty option)
+                        radio.required = selectedCourse === 'ภาษาจีน'; 
+                    });
+                    document.querySelectorAll('#parentEvalForm input[data-filler="chinese"]').forEach(input => input.remove());
+                }
+            };
+
+            // Initialize on load (in case user reloads with form data)
+            handleCourseChange(); 
+            // Add listener for change events
+            courseSelectParent.addEventListener('change', handleCourseChange); 
+
         });
 
         // Function to generate rating inputs dynamically
@@ -554,6 +613,7 @@
             questions.forEach((text, index) => {
                 const item = document.createElement('div');
                 item.className = 'rating-item';
+                // Note: The rating inputs must have the 'required' attribute
                 item.innerHTML = `
                     <label class="block text-base sm:text-lg text-gray-700 mb-2">${text}</label>
                     <div class="flex justify-between items-center px-2 py-1">
@@ -595,6 +655,8 @@
         // Hide custom dialog
         function hideDialog() {
             document.getElementById('dialog-modal').classList.add('hidden');
+            // After hiding, reset to the main page if submission was successful
+            showPage('main-page');
         }
 
         // Handle form submissions
@@ -603,6 +665,12 @@
             const form = document.getElementById(formId);
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
+
+                // Ensure the dynamic logic runs one last time before submission for parent form
+                if (formId === 'parentEvalForm') {
+                    // Call the change handler logic to set '0' values if needed
+                    document.getElementById('course_parent').dispatchEvent(new Event('change'));
+                }
 
                 const loadingMessage = form.querySelector('[id^="loading-message-"]');
                 const successMessage = form.querySelector('[id^="success-message-"]');
@@ -618,11 +686,9 @@
                 const formData = new FormData(form);
                 const data = Object.fromEntries(formData.entries());
 
-                // **** สำคัญ: ต้องเปลี่ยน URL นี้เป็น Web App URL Deployment ล่าสุดของคุณ ****
-                const url = "https://script.google.com/macros/s/AKfycbyA_EJB9sxCZFVZP5reKwfijhOglutOdSsSQBsKOEBM3xR3vkoOHe086XNN6wBF5hBGrw/exec"; 
-
                 try {
-                    await fetch(url, {
+                    // Use the constant URL defined at the top of the script
+                    await fetch(WEB_APP_URL, {
                         method: 'POST',
                         mode: 'no-cors',
                         headers: {
@@ -631,7 +697,8 @@
                         body: new URLSearchParams(data)
                     });
 
-                    successMessage.classList.remove('hidden');
+                    // Success handling
+                    showDialog('✅ ข้อมูลของคุณถูกส่งเรียบร้อยแล้ว! ขอบคุณครับ/ค่ะ');
                     form.reset();
                 } catch (error) {
                     errorMessage.classList.remove('hidden');
