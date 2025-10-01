@@ -28,8 +28,23 @@
             margin: auto;
             position: relative;
         }
+        
+        /* 1. แบบสอบถามที่ 1 (Satisfaction Survey) - Creamy Beige */
+        #eval-form .liquid-glass-card {
+            background: rgba(240, 234, 214, 0.6); /* Creamy Beige: #F0EAD6 */
+        }
+        
+        /* 2. แบบสอบถามที่ 2 (Teacher Eval - Student) - Pastel Pink */
+        #teacher-form .liquid-glass-card {
+            background: rgba(250, 218, 221, 0.7); /* Pastel Pink: #FADADD */
+        }
+
+        /* 3. แบบสอบถามที่ 3 (Parent Survey) - Pastel Blue */
+        #parent-form .liquid-glass-card {
+            background: rgba(214, 234, 248, 0.7); /* Pastel Blue: #D6EAF8 */
+        }
+
         .liquid-glass-card {
-            background: rgba(200, 230, 255, 0.6); /* พื้นหลังโทนฟ้าอ่อนๆ */
             backdrop-filter: blur(10px);
             border-radius: 1.5rem;
             padding: 2rem;
@@ -199,7 +214,7 @@
         </div>
     </div>
 
-    <!-- แบบฟอร์มที่ 1 (Sheet2): แบบประเมินครู (สำหรับนักเรียน) -->
+    <!-- แบบฟอร์มที่ 2 (Sheet2): แบบประเมินครู (สำหรับนักเรียน) - พื้นหลังสีชมพูพาสเทล -->
     <div id="teacher-form" class="container hidden">
         <button class="close-btn" onclick="showPage('main-page')">
             &#10006;
@@ -302,7 +317,7 @@
         </form>
     </div>
 
-    <!-- แบบฟอร์มที่ 2 (Sheet3): แบบสอบถามผู้ปกครอง -->
+    <!-- แบบฟอร์มที่ 3 (Sheet3): แบบสอบถามผู้ปกครอง - พื้นหลังสีฟ้าพาสเทล -->
     <div id="parent-form" class="container hidden">
         <button class="close-btn" onclick="showPage('main-page')">
             &#10006;
@@ -317,17 +332,17 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-base sm:text-lg text-gray-700 font-medium mb-2">1. โรงเรียน:</label>
-                        <input type="text" id="school_parent" name="school" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 transition-colors duration-200" required>
+                        <input type="text" id="school_parent" name="school" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-200" required>
                     </div>
                     <div>
                         <label class="block text-base sm:text-lg text-gray-700 font-medium mb-2">2. ระดับชั้นของนักเรียน:</label>
-                        <select id="grade_parent" name="grade" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 transition-colors duration-200" required>
+                        <select id="grade_parent" name="grade" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-200" required>
                             <option value="">-- กรุณาเลือกระดับชั้น --</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-base sm:text-lg text-gray-700 font-medium mb-2">3. หลักสูตรที่ท่านต้องการประเมิน:</label>
-                        <select id="course_parent" name="course" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 transition-colors duration-200" required>
+                        <select id="course_parent" name="course" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-200" required>
                             <option value="">-- กรุณาเลือกหลักสูตร --</option>
                             <option value="ภาษาอังกฤษ">ภาษาอังกฤษ</option>
                             <option value="ภาษาจีน">ภาษาจีน</option>
@@ -357,16 +372,17 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-base sm:text-lg text-gray-700 mb-2">1. ข้อเสนอแนะเพิ่มเติมเกี่ยวกับการจัดการเรียนรู้ภาษาอังกฤษโดยครูต่างชาติ:</label>
-                        <textarea id="parent_english_suggestions" name="parent_english_suggestions" rows="3" class="w-full px-4 py-2 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 transition-colors duration-200"></textarea>
+                        <textarea id="parent_english_suggestions" name="parent_english_suggestions" rows="3" class="w-full px-4 py-2 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-200"></textarea>
                     </div>
-                    <div>
+                    <!-- Container for Chinese Suggestions: Hidden/Shown based on selection -->
+                    <div id="chinese-suggestions-container">
                         <label class="block text-base sm:text-lg text-gray-700 mb-2">2. ข้อเสนอแนะเพิ่มเติมเกี่ยวกับการจัดการเรียนรู้ภาษาจีน:</label>
-                        <textarea id="parent_chinese_suggestions" name="parent_chinese_suggestions" rows="3" class="w-full px-4 py-2 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-300 transition-colors duration-200"></textarea>
+                        <textarea id="parent_chinese_suggestions" name="parent_chinese_suggestions" rows="3" class="w-full px-4 py-2 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 transition-colors duration-200"></textarea>
                     </div>
                 </div>
             </div>
             <div class="flex justify-center">
-                <button type="submit" class="bg-gradient-to-r from-pink-400 to-purple-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:from-pink-500 hover:to-purple-600 transition-all duration-300 transform hover:scale-105">
+                <button type="submit" class="bg-gradient-to-r from-blue-400 to-indigo-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:from-blue-500 hover:to-indigo-600 transition-all duration-300 transform hover:scale-105">
                     ส่งแบบสอบถาม
                 </button>
             </div>
@@ -382,7 +398,7 @@
         </form>
     </div>
 
-    <!-- แบบฟอร์มที่ 3 (Sheet1): แบบประเมินความพึงพอใจ -->
+    <!-- แบบฟอร์มที่ 1 (Sheet1): แบบประเมินความพึงพอใจ - พื้นหลังสีครีมพาสเทล -->
     <div id="eval-form" class="container hidden">
         <button class="close-btn" onclick="showPage('main-page')">
             &#10006;
@@ -516,18 +532,18 @@
                 "1. ท่านคิดว่านักเรียนมีความก้าวหน้าในการเรียนภาษาอังกฤษโดยครูต่างชาติที่โรงเรียนจัดขึ้น",
                 "2. ท่านพบว่านักเรียนมีความสามารถในการใช้ภาษาอังกฤษในชีวิตประจำวันเพิ่มขึ้น",
                 "3. ท่านพึงพอใจกับเนื้อหาของหลักสูตรภาษาอังกฤษ โดยครูต่างชาติที่โรงเรียนจัดการเรียนรู้",
-                "4. ท่านเห็นว่าการเรียนภาษาอังกฤษโดยครูต่างชาติในโรงเรียนมีประโยชน์ต่อนักเรียนมากน้อยเพียงใด",
+                "4. ท่านเห็นว่าการเรียนภาษาอังกฤษโดยครูต่างชาติในโรงเรียนมีประโยชน์ต่อนักเรียน",
                 "5. ความพึงพอใจต่อการจัดการเรียนรู้ภาษาอังกฤษโดยครูต่างชาติในภาพรวม"
             ];
             const parentEnglishRatingsSection = document.getElementById('parent-english-ratings');
             generateRatingInputs(parentEnglishRatingsSection, parentEnglishRatings, "rating-parent-english");
 
-            // Parent Form Chinese Ratings (Sheet3) - UPDATED TEXT (Corrected language context)
+            // Parent Form Chinese Ratings (Sheet3) - UPDATED TEXT
             const parentChineseRatings = [
                 "1. ท่านคิดว่านักเรียนมีความก้าวหน้าในการเรียนภาษาจีนจากหลักสูตรที่โรงเรียนจัดขึ้น",
-                "2. ท่านพบว่านักเรียนมีความสามารถในการใช้ภาษาจีนในชีวิตประจำวันเพิ่มขึ้นการเรียนรู้",
-                "3. ท่านพึงพอใจกับเนื้อหาของหลักสูตรภาษาจีนที่โรงเรียนจัด",
-                "4. ท่านเห็นว่าการเรียนภาษาจีนในโรงเรียนมีประโยชน์ต่อนักเรียน", // Removed "มากน้อยเพียงใด" as per request
+                "2. ท่านพบว่านักเรียนมีความสามารถในการใช้ภาษาจีนในชีวิตประจำวันเพิ่มขึ้น",
+                "3. ท่านพึงพอใจกับเนื้อหาของหลักสูตรภาษาจีนที่โรงเรียนจัดการเรียนรู้",
+                "4. ท่านเห็นว่าการเรียนภาษาจีนในโรงเรียนมีประโยชน์ต่อนักเรียน",
                 "5. ความพึงพอใจต่อการจัดการเรียนรู้ภาษาจีนโดยรวม"
             ];
             const parentChineseRatingsSection = document.getElementById('parent-chinese-ratings');
@@ -556,51 +572,61 @@
             
             // --- Course Selection Logic for Parent Form (Sheet3) ---
             const courseSelectParent = document.getElementById('course_parent');
-            const chineseSection = document.getElementById('chinese-course-section');
+            const chineseRatingsSection = document.getElementById('chinese-course-section');
+            const chineseSuggestionContainer = document.getElementById('chinese-suggestions-container'); // Container for suggestion
+            const chineseSuggestionInput = document.getElementById('parent_chinese_suggestions'); // The actual textarea
 
             const handleCourseChange = () => {
                 const selectedCourse = courseSelectParent.value;
-                const chineseRadios = chineseSection.querySelectorAll('input[type="radio"]');
+                const chineseRadios = chineseRatingsSection.querySelectorAll('input[type="radio"]');
 
                 if (selectedCourse === 'ภาษาอังกฤษ') {
-                    // 1. Hide Chinese section
-                    chineseSection.classList.add('hidden');
+                    // 1. Hide Chinese Rating section
+                    chineseRatingsSection.classList.add('hidden');
                     
-                    // 2. Unset 'required' for hidden inputs and set values to '0'
+                    // 2. Hide Chinese Suggestion section (NEW REQUIREMENT)
+                    chineseSuggestionContainer.classList.add('hidden');
+                    
+                    // 3. Unset 'required' for hidden inputs
                     chineseRadios.forEach(radio => {
-                        radio.required = false; // Important for submission
-                        // Uncheck any current selection
+                        radio.required = false; 
                         radio.checked = false; 
                     });
 
-                    // 3. Add hidden fields to explicitly send '0' for Chinese ratings
-                    // This ensures the column structure in Sheet3 is maintained.
-                    // We remove previous hidden inputs before adding new ones
-                    document.querySelectorAll('#parentEvalForm input[data-filler="chinese"]').forEach(input => input.remove());
-                    
+                    // 4. Set '0' values for Section 2 Ratings (5 questions)
+                    document.querySelectorAll('#parentEvalForm input[data-filler="chinese_ratings"]').forEach(input => input.remove());
                     for (let i = 1; i <= 5; i++) {
                         const fillerInput = document.createElement('input');
                         fillerInput.type = 'hidden';
                         fillerInput.name = `rating-parent-chinese-${i}`;
-                        fillerInput.value = '0'; // Set value to '0' as requested
-                        fillerInput.setAttribute('data-filler', 'chinese');
+                        fillerInput.value = '0'; 
+                        fillerInput.setAttribute('data-filler', 'chinese_ratings');
                         document.getElementById('parentEvalForm').appendChild(fillerInput);
                     }
+                    
+                    // 5. Set '0' value for Chinese Suggestion Textarea (NEW REQUIREMENT)
+                    chineseSuggestionInput.value = '0';
+                    chineseSuggestionInput.required = false; // Just in case it was set to required
 
                 } else if (selectedCourse === 'ภาษาจีน' || selectedCourse === '') {
-                    // Show Chinese section
-                    chineseSection.classList.remove('hidden');
+                    // Show sections
+                    chineseRatingsSection.classList.remove('hidden');
+                    chineseSuggestionContainer.classList.remove('hidden');
                     
-                    // Re-set 'required' and remove filler inputs
+                    // Re-set 'required' for ratings and remove filler inputs
                     chineseRadios.forEach(radio => {
-                        // Only make required if a course is actually selected (not the default empty option)
                         radio.required = selectedCourse === 'ภาษาจีน'; 
                     });
-                    document.querySelectorAll('#parentEvalForm input[data-filler="chinese"]').forEach(input => input.remove());
+                    document.querySelectorAll('#parentEvalForm input[data-filler="chinese_ratings"]').forEach(input => input.remove());
+
+                    // Clear '0' from suggestion box if it was set
+                    if (chineseSuggestionInput.value === '0') {
+                        chineseSuggestionInput.value = '';
+                    }
                 }
             };
 
-            // Initialize on load (in case user reloads with form data)
+            // Initialize on load 
             handleCourseChange(); 
             // Add listener for change events
             courseSelectParent.addEventListener('change', handleCourseChange); 
